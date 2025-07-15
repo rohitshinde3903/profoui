@@ -8,11 +8,12 @@ asgiref==3.8.1
 
 
 
-numpy==2.2.0
-pandas==2.2.2
-scipy==1.13.1
-numba==0.59.1
+numpy==1.26.4
+       # Avoid latest pandas 2.3.x which may require 3.13+
+scipy==1.12.0
+numba==0.59.0
 llvmlite==0.42.0
+
 
 
 # Web/API Stack
