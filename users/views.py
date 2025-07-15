@@ -51,15 +51,31 @@ def send_otp_email(request, user_email, otp):
     message = f"Your email verification OTP is {otp}."
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
 
-import pandas as pd
+
 import plotly.express as px
+from collections import Counter
 
 def chart_view(request):
-    data = CustomUser.objects.all().values('role')  # Fetch data from CustomUser model
-    df = pd.DataFrame(list(data))
-    fig = px.bar(df, x="role", title="User Roles Distribution", color="role")
-
-    # Convert the Plotly chart to HTML
+    # Get role counts using Python's Counter
+    roles = CustomUser.objects.values_list('role', flat=True)
+    role_counts = Counter(roles)
+    
+    # Prepare data for Plotly
+    data = {
+        'role': list(role_counts.keys()),
+        'count': list(role_counts.values())
+    }
+    
+    # Create Plotly chart directly from the dictionary
+    fig = px.bar(
+        data,
+        x='role',
+        y='count',
+        title='User Roles Distribution',
+        color='role'
+    )
+    
+    # Convert to HTML
     graph = fig.to_html(full_html=False)
     return render(request, 'admin/chart.html', {'graph': graph})
 
