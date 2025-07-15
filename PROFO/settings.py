@@ -29,8 +29,8 @@ SECRET_KEY = "1234"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profo.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
-CSRF_TRUSTED_ORIGINS = ['https://profo.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profoui.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
+CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 
 
 
