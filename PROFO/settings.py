@@ -40,16 +40,16 @@ CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonany
 # Application definition
 
 INSTALLED_APPS = [
-    'unfold',
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    'whitenoise.runserver_nostatic',  # Add this before 'django.contrib.staticfiles'
     "django.contrib.staticfiles",
     'users',
-    'widget_tweaks',
-    'whitenoise.runserver_nostatic',  # Add this before 'django.contrib.staticfiles'
+   
     
 ]
 
