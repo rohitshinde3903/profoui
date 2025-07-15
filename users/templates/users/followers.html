@@ -1,0 +1,56 @@
+<!-- users/templates/users/home.html -->
+{% extends 'users/base.html' %}
+{% block title %}Home - PROFO{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="container mt-5 mb-5">
+    <!-- Page Title -->
+    <div class="text-center">
+        <h1 class="display-4 fw-bold">Followers of {{ profile_user.username }}</h1>
+        <p class="">View the list of users who follow {{ profile_user.username }}.</p>
+    </div>
+
+    {% if followers %}
+        <!-- Followers List -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-8">
+                <ul class="list-group shadow">
+                    {% for follow in followers %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'public_profile' follow.follower.username %}" class="text-decoration-none text-primary fw-semibold">
+                            {{ follow.follower.username }}
+                        </a>
+                        <div>
+                            <span class="badge bg-success">Follower</span>
+                            {% if request.user == profile_user %}
+                                <a href="{% url 'delete_follower' follow.follower.id %}" class="btn btn-outline-danger btn-sm ms-2">
+                                    <i class="bi bi-x-circle"></i> Remove
+                                </a>
+                            {% endif %}
+                        </div>
+                    </li>
+                    
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <!-- No Followers Message -->
+        <div class="text-center mt-5">
+            {% if request.user == profile_user %}
+                <p class=" fs-5">You have no followers yet.</p>
+                <a href="/" class="btn btn-primary mt-3">
+                    Discover People
+                </a>
+            {% else %}
+                <p class="text-muted fs-5">Followers list is private.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

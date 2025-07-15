@@ -1,0 +1,394 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Home - PROFO{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section text-center mb-5 position-relative">
+        <div class="hero-badge">New Features Available!</div>
+        <h1 class="display-4 fw-bold text-primary mb-3 fade-in">Welcome to PROFO!</h1>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <p class="lead mb-3 fade-in-up">
+                    Your one-stop platform to manage and analyze all your social media profiles seamlessly.
+                </p>
+                <p class="text-muted fade-in-up-delay">
+                    Discover powerful tools for automation, profile optimization, and AI-driven insights.
+                </p>
+                <div class="stats-container mt-5">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="ph ph-users text-primary"></i>
+                                <h3 class="counter">10K+</h3>
+                                <p>Active Users</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="ph ph-chart-line-up text-primary"></i>
+                                <h3 class="counter">5M+</h3>
+                                <p>Profiles Analyzed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <i class="ph ph-star text-primary"></i>
+                                <h3 class="counter">98%</h3>
+                                <p>Satisfaction Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features-section mb-5">
+        <h2 class="text-center h2 fw-bold mb-4">Powerful Features</h2>
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="card-body p-4">
+                        <div class="feature-icon">
+                            <i class="ph ph-user-circle-gear"></i>
+                        </div>
+                        <h3 class="card-title h5 fw-bold">Profile Management</h3>
+                        <p class="card-text">
+                            Centralize all your profiles in one place with advanced management tools and real-time updates.
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="ph ph-check"></i> Multi-platform support</li>
+                            <li><i class="ph ph-check"></i> Automated updates</li>
+                            <li><i class="ph ph-check"></i> Smart suggestions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="card-body p-4">
+                        <div class="feature-icon">
+                            <i class="ph ph-chart-pie"></i>
+                        </div>
+                        <h3 class="card-title h5 fw-bold">AI Analytics</h3>
+                        <p class="card-text">
+                            Get detailed insights and performance metrics powered by advanced AI algorithms.
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="ph ph-check"></i> Real-time tracking</li>
+                            <li><i class="ph ph-check"></i> Predictive analysis</li>
+                            <li><i class="ph ph-check"></i> Custom reports</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="card-body p-4">
+                        <div class="feature-icon">
+                            <i class="ph ph-robot"></i>
+                        </div>
+                        <h3 class="card-title h5 fw-bold">Automation Suite</h3>
+                        <p class="card-text">
+                            Streamline your workflow with powerful automation tools and scheduling features.
+                        </p>
+                        <ul class="feature-list">
+                            <li><i class="ph ph-check"></i> Smart scheduling</li>
+                            <li><i class="ph ph-check"></i> Auto-engagement</li>
+                            <li><i class="ph ph-check"></i> Content planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonial Section -->
+    <div class="testimonial-section mb-5">
+        <div class="text-center mb-4">
+            <h2 class="h2 fw-bold">What Our Users Say</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="ph ph-quotes text-primary"></i>
+                        <p>"PROFO has transformed how I manage my social presence. The analytics are incredible!"</p>
+                        <div class="user-info">
+                            <i class="ph ph-user-circle"></i>
+                            <div>
+                                <h4>Sarah Johnson</h4>
+                                <p>Digital Marketer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="ph ph-quotes text-primary"></i>
+                        <p>"The automation features save me hours every week. Absolutely worth every penny!"</p>
+                        <div class="user-info">
+                            <i class="ph ph-user-circle"></i>
+                            <div>
+                                <h4>Mike Chen</h4>
+                                <p>Content Creator</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section text-center">
+        {% if user.is_authenticated %}
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'profile' %}" class="btn btn-primary btn-lg px-4 pulse-animation">
+                <i class="ph ph-user-circle me-2"></i>Go to Your Profile
+            </a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-secondary btn-lg px-4">
+                <i class="ph ph-sign-out me-2"></i>Logout
+            </a>
+        </div>
+        {% else %}
+        <div class="cta-container">
+            <h3 class="mb-4">Ready to Get Started?</h3>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg px-4">
+                    <i class="ph ph-sign-in me-2"></i>Login
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg px-4 pulse-animation">
+                    <i class="ph ph-user-plus me-2"></i>Sign Up Free
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Hero Section Styles */
+    .hero-section {
+        padding: 3rem 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-badge {
+        position: absolute;
+        top: 0;
+        right: 5%;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0 0 10px 10px;
+        font-weight: 600;
+        animation: slideDown 0.5s ease;
+    }
+
+    /* Stats Section */
+    .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+    }
+
+    .stat-card i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: rgba(255,107,53,0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-icon i {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    .feature-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+    }
+
+    .feature-list i {
+        color: var(--primary-color);
+    }
+
+    /* Testimonial Cards */
+    .testimonial-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+        height: 100%;
+    }
+
+    .testimonial-content i.ph-quotes {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .user-info i {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+    }
+
+    .user-info h4 {
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .user-info p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    /* Animations */
+    .fade-in {
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .fade-in-up-delay {
+        animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 2rem 0;
+        }
+
+        .hero-badge {
+            opacity: 0;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+        }
+        
+        .stat-card {
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card {
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card {
+            margin-bottom: 1rem;
+        }
+        
+        .btn-lg {
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+            max-width: 250px;
+            margin: 0.5rem auto;
+        }
+        
+        .d-flex.gap-3 {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}

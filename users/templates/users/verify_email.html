@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100 fade-in">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; background: #F9F9F9; border: 1px solid #FF6B35;">
+        <h2 class="text-center mb-4" style="color: #FF6B35;">
+            <i class="bi bi-envelope-fill me-2"></i>Email Verification
+        </h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="email" class="form-label" style="color: #555;">Email</label>
+                <input 
+                    type="email" 
+                    name="email" 
+                    id="email" 
+                    class="form-control" 
+                    placeholder="Enter your registered email" 
+                    style="background-color: #FFFCF9; color: #555; border: 1px solid #FF6B35;" 
+                    required>
+            </div>
+            <button 
+                type="submit" 
+                class="btn btn-outline-orange w-100 hover-bounce">
+                <i class="bi bi-send-fill me-2"></i>Send Verification Email
+            </button>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    /* Button Hover Effect */
+.hover-bounce:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Outline color for buttons */
+.btn-outline-orange {
+    border: 1px solid #FF6B35;
+    color: #FF6B35;
+    background-color: transparent;
+}
+
+.btn-outline-orange:hover {
+    background-color: #FF6B35;
+    color: #fff;
+}
+
+</style>
+{% endblock %}

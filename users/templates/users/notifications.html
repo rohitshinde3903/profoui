@@ -1,0 +1,52 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4 text-primary">Your Notifications</h2>
+        
+        {% if notifications %}
+            <div class="list-group shadow-sm rounded-3">
+                {% for notification in notifications %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center p-4 mb-3 rounded-3" style="background-color: #f8f9fa; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                        <div class="d-flex flex-column">
+                            <strong class="text-dark">{{ notification.message|safe }}</strong>
+                            <small class="text-muted mt-2">{{ notification.created_at|date:"F j, Y, g:i a" }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                You don't have any notifications yet!
+            </div>
+        {% endif %}
+    </div>
+
+    <style>
+        .list-group-item {
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background-color: #e9ecef;
+        }
+
+        .list-group-item strong {
+            color: #343a40;
+            font-size: 1.1rem;
+        }
+
+        .list-group-item small {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+{% endblock %}

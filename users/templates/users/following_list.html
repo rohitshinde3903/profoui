@@ -1,0 +1,47 @@
+<!-- users/templates/users/following.html -->
+{% extends 'users/base.html' %}
+{% block title %}{{ user.username }} is Following - PROFO{% endblock %}
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <!-- Page Title -->
+    <div class="text-center">
+        <h1 class="display-5 fw-bold">{{ user.username }} is Following</h1>
+        <p class="text-muted">Here is the list of people {{ user.username }} is currently following.</p>
+    </div>
+
+    {% if following %}
+        <!-- Following List -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-8">
+                <ul class="list-group shadow">
+                    {% for follow in following %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <!-- Link to Profile -->
+                            <a href="{% url 'profile' follow.followed.username %}" class="text-decoration-none text-primary fw-semibold">
+                                {{ follow.followed.username }}
+                            </a>
+                            <!-- Unfollow Button -->
+                            <form method="POST" action="{% url 'unfollow_user' follow.followed.username %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Unfollow</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <!-- Not Following Anyone -->
+        <div class="text-center mt-5">
+            <p class="text-muted fs-5">{{ user.username }} is not following anyone yet.</p>
+        </div>
+    {% endif %}
+
+    <!-- Back to Profile Link -->
+    <div class="text-center mt-4">
+        <a href="{% url 'profile' user.username %}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>
+
+{% endblock %}

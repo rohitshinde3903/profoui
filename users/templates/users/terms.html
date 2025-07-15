@@ -1,0 +1,128 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Terms and Conditions{% endblock %}
+
+{% block content %}
+<div class="container my-5 px-4">
+    <h1 class="text-center mb-5" style="color: #ff7f50;">Terms and Conditions</h1>
+    <div class="terms-container">
+        <p>
+            Welcome to PROFO. By accessing or using our platform, you agree to comply with the following terms and conditions.
+        </p>
+        <div class="section">
+            <h3>1. Account Registration</h3>
+            <p>
+                You must provide accurate and complete information during registration. You are responsible for maintaining the confidentiality of your account.
+            </p>
+        </div>
+        <div class="section">
+            <h3>2. Use of Services</h3>
+            <p>
+                You agree to use the platform in compliance with applicable laws and not to engage in activities that harm the platform or other users.
+            </p>
+        </div>
+        <div class="section">
+            <h3>3. Intellectual Property</h3>
+            <p>
+                All content, trademarks, and intellectual property on the platform belong to PROFO. You may not reproduce or distribute content without permission.
+            </p>
+        </div>
+        <div class="section">
+            <h3>4. Termination</h3>
+            <p>
+                We reserve the right to suspend or terminate your access to the platform for violating these terms or engaging in harmful activities.
+            </p>
+        </div>
+        <div class="section">
+            <h3>5. Limitation of Liability</h3>
+            <p>
+                PROFO is not liable for any damages resulting from your use of the platform, including data loss or service interruptions.
+            </p>
+        </div>
+        <div class="section">
+            <h3>6. Changes to Terms</h3>
+            <p>
+                We may update these terms periodically. Your continued use of the platform constitutes acceptance of the updated terms.
+            </p>
+        </div>
+        <div class="section">
+            <h3>7. Contact Us</h3>
+            <p>
+                For questions or concerns about these terms, contact us at <a href="mailto:support@profo.com" class="contact-link">support@profo.com</a>.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Background with textured white theme */
+body {
+    background-color: #f8f9fa;
+    background-image: url('path-to-texture-image.jpg'); /* Add a subtle texture image */
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* Main content section */
+.terms-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+/* Title styling */
+h1 {
+    color: #ff7f50;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+/* Section headings */
+h3 {
+    color: #ff7f50;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+/* Paragraphs */
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Styling for the contact link */
+.contact-link {
+    color: #ff7f50;
+    text-decoration: none;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    p {
+        font-size: 0.9rem;
+    }
+}
+
+</style>
+
+
+{% endblock %}

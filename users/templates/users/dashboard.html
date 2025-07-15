@@ -1,0 +1,95 @@
+{% extends 'users/base.html' %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">{{ user.username }}'s Profile</h2>
+        {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="img-thumbnail mb-3" style="width:150px; height:150px;">
+        {% endif %}
+        {% if user.bio %}
+        <p><strong>Bio:</strong> {{ user.bio }}</p>
+        {% endif %}
+        
+        <h3>Social Media Links</h3>
+        <ul class="list-group">
+            {% for link in social_links %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ link.platform }}:</strong>
+                    <a href="{% url 'track_social_link' link.id %}" target="_blank">{{ link.url }}</a>
+                </div>
+                <span class="badge bg-primary rounded-pill">
+                    Clicks: {{ link.click_count }}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Daily Click Trends -->
+<h3 class="mt-5">Daily Click Trends</h3>
+{% for link in most_clicked_links %}
+    <h4>{{ link.platform }}</h4>
+    <canvas id="clickChart{{ link.id }}" width="400" height="200"></canvas>
+    <script>
+        var ctx = document.getElementById('clickChart{{ link.id }}').getContext('2d');
+        var clickChart{{ link.id }} = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [
+                    {% for click in link.daily_clicks %}
+                        "{{ click.date }}",
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: "Daily Clicks",
+                    data: [
+                        {% for click in link.daily_clicks %}
+                            {{ click.click_count }},
+                        {% endfor %}
+                    ],
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Click Trend for {{ link.platform }}'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Clicks'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endfor %}
+
+<!-- Include Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock %}

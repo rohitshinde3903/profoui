@@ -1,0 +1,210 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Social Media Links{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="container mt-5 mb-5">
+    <h2 class="text-center mb-4" style="color: #FF6B35;">
+        <i class="bi bi-link-45deg me-2"></i>Your Social Media Links
+    </h2>
+
+    <!-- Form -->
+    <div class="card mb-4 shadow-lg p-4 border-0 rounded-4" style="background: #F9F9F9;">
+        <div class="card-body">
+            <form method="POST" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <!-- Platform Field -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="{{ form.platform.id_for_label }}" style="color: #333;">
+                        <i class="bi bi-app-indicator me-2"></i>{{ form.platform.label }}
+                    </label>
+                    <div class="input-group">
+                        {{ form.platform }}
+                    </div>
+                </div>
+
+                <!-- Custom Platform Field -->
+                <div id="customPlatformInput" class="mb-3" style="display: none;">
+                    <label class="form-label fw-bold" for="{{ form.custom_platform.id_for_label }}" style="color: #333;">
+                        <i class="bi bi-pencil me-2"></i>Custom Platform Name
+                    </label>
+                    <div class="input-group">
+                        {{ form.custom_platform }}
+                    </div>
+                </div>
+
+                <!-- URL Field -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="{{ form.url.id_for_label }}" style="color: #333;">
+                        <i class="bi bi-globe me-2"></i>{{ form.url.label }}
+                    </label>
+                    <div class="input-group">
+                        {{ form.url }}
+                    </div>
+                </div>
+
+                <!-- Privacy Setting -->
+                <div class="mb-3 form-check">
+                    {{ form.is_private }}
+                    <label class="form-check-label" for="{{ form.is_private.id_for_label }}" style="color: #333;">
+                        <i class="bi bi-shield-lock me-2"></i>Make this link private
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-orange w-100 mt-3">
+                    <i class="bi bi-plus-circle me-2"></i> Add Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+<!-- Existing Links -->
+<h3 class="text-orange"><i class="bi bi-collection me-2"></i>Existing Links</h3>
+
+<div class="table-responsive">
+    <table class="table table-hover table-bordered rounded">
+        <thead class="table-header">
+            <tr>
+                <th><i class="bi bi-app"></i> Platform</th>
+                <th><i class="bi bi-link"></i> URL</th>
+                <th><i class="bi bi-eye-slash"></i> Privacy</th>
+                <th><i class="bi bi-gear"></i> Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for link in user.social_links.all %}
+                <tr>
+                    <td class="table-cell">{{ link.platform }}</td>
+                    <td class="table-cell">
+                        <span class="d-none d-sm-inline">{{ link.url }}</span>
+                        <span class="d-inline d-sm-none">{{ link.url|truncatewords:3 }}</span>
+                    </td>
+                    <td class="table-cell">
+                        {% if link.is_private %}
+                            <span class="badge bg-danger">Private</span>
+                        {% else %}
+                            <span class="badge bg-success">Public</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-cell">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'edit_social_link' link.id %}" class="btn btn-outline-warning">
+                                <i class="bi bi-pencil-square me-1"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_social_link' link.id %}" class="btn btn-outline-danger">
+                                <i class="bi bi-trash-fill me-1"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<style>
+    /* Table Header Styling */
+.table-header {
+    background: #FF6B35;
+    color: #FFF;
+    text-transform: uppercase;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Table Cells */
+.table-cell {
+    color: #333;
+    padding: 12px;
+    vertical-align: middle;
+}
+
+/* Hover Effect for Rows */
+.table-hover tbody tr:hover {
+    background-color: #FFF5ED;
+}
+
+/* Table Border Styling */
+.table {
+    background-color: #FFF;
+    border: 1px solid #FF6B35;
+    border-radius: 8px;
+}
+
+/* Action Buttons */
+.btn-outline-warning {
+    border-color: #FF6B35;
+    color: #FF6B35;
+}
+.btn-outline-warning:hover {
+    background-color: #FF6B35;
+    color: #FFF;
+}
+
+.btn-outline-danger {
+    border-color: #DC3545;
+    color: #DC3545;
+}
+.btn-outline-danger:hover {
+    background-color: #DC3545;
+    color: #FFF;
+}
+
+/* Badge Styling */
+.badge {
+    padding: 0.5em 0.7em;
+    font-size: 0.9em;
+}
+.bg-danger {
+    background-color: #FF4E50;
+}
+.bg-success {
+    background-color: #28A745;
+}
+
+/* Orange Theme Text */
+.text-orange {
+    color: #FF6B35;
+}
+
+    .btn-orange {
+        background-color: #FF6B35;
+        color: white;
+        border: none;
+    }
+    .btn-orange:hover {
+        background-color: #E65A2B;
+    }
+    .form-label {
+        font-size: 0.95rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const platformSelect = document.getElementById('{{ form.platform.id_for_label }}');
+        const customPlatformDiv = document.getElementById('customPlatformInput');
+        const customPlatformInput = document.querySelector('#customPlatformInput input');
+
+        platformSelect.addEventListener('change', function () {
+            if (this.value === 'Other') {
+                customPlatformDiv.style.display = 'block';
+                customPlatformInput.required = true;
+            } else {
+                customPlatformDiv.style.display = 'none';
+                customPlatformInput.required = false;
+                customPlatformInput.value = '';
+            }
+        });
+
+        platformSelect.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

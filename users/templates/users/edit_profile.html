@@ -1,0 +1,65 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="container mt-3 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg p-4 border-0 rounded-4" style="background: #F9F9F9;">
+                <h2 class="text-center mb-4" style="color: #FF6B35;">
+                    <i class="bi bi-person-circle me-2"></i>Edit Profile
+                </h2>
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="{{ field.id_for_label }}" style="color: #333;">
+                                <i class="bi bi-pencil me-2"></i>{{ field.label }}
+                            </label>
+                            <div class="input-group">
+                                {{ field }}
+                            </div>
+                            {% if field.name == "bio" %}
+                                <small id="bio-counter" class="text-muted">300 characters remaining</small>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger small">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-orange w-100 mt-3">
+                        <i class="bi bi-save me-2"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bioField = document.getElementById('{{ form.bio.id_for_label }}');
+        const bioCounter = document.getElementById('bio-counter');
+        const maxChars = 300;
+
+        if (bioField) {
+            const updateCounter = () => {
+                const remaining = maxChars - bioField.value.length;
+                bioCounter.textContent = `${remaining} characters remaining`;
+                bioCounter.classList.toggle('text-danger', remaining < 0);
+            };
+
+            updateCounter();
+            bioField.addEventListener('input', updateCounter);
+        }
+    });
+</script>
+{% endblock %}

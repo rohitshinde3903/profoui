@@ -1,0 +1,91 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Edit Social Media Link{% endblock %}
+
+{% block content %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg p-4 border-0 rounded-4" style="background: #F9F9F9;">
+                <h2 class="text-center mb-4" style="color: #FF6B35;">
+                    <i class="bi bi-pencil-square me-2"></i>Edit Social Media Link
+                </h2>
+                <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+
+                    <!-- Platform Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="{{ form.platform.id_for_label }}" style="color: #333;">
+                            <i class="bi bi-app-indicator me-2"></i>{{ form.platform.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.platform }}
+                        </div>
+                    </div>
+
+                    <!-- Custom Platform Field -->
+                    <div id="customPlatformInput" class="mb-3" style="display: none;">
+                        <label class="form-label fw-bold" for="{{ form.custom_platform.id_for_label }}" style="color: #333;">
+                            <i class="bi bi-pencil me-2"></i>Custom Platform Name
+                        </label>
+                        <div class="input-group">
+                            {{ form.custom_platform }}
+                        </div>
+                    </div>
+
+                    <!-- URL Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="{{ form.url.id_for_label }}" style="color: #333;">
+                            <i class="bi bi-globe me-2"></i>{{ form.url.label }}
+                        </label>
+                        <div class="input-group">
+                            {{ form.url }}
+                        </div>
+                    </div>
+
+                    <!-- Privacy Setting -->
+                    <div class="mb-3 form-check">
+                        {{ form.is_private }}
+                        <label class="form-check-label" for="{{ form.is_private.id_for_label }}" style="color: #333;">
+                            <i class="bi bi-shield-lock me-2"></i>Make this link private
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange w-100 mt-3">
+                        <i class="bi bi-save me-2"></i> Update Link
+                    </button>
+                </form>
+                <p class="mt-3 text-center">
+                    <a href="{% url 'social_links' %}" style="color: #FF6B35;">
+                        <i class="bi bi-arrow-left-circle me-2"></i>Back to Social Media Links
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const platformSelect = document.getElementById('{{ form.platform.id_for_label }}');
+        const customPlatformDiv = document.getElementById('customPlatformInput');
+        const customPlatformInput = document.querySelector('#customPlatformInput input');
+
+        platformSelect.addEventListener('change', function () {
+            if (this.value === 'Other') {
+                customPlatformDiv.style.display = 'block';
+                customPlatformInput.required = true;
+            } else {
+                customPlatformDiv.style.display = 'none';
+                customPlatformInput.required = false;
+                customPlatformInput.value = '';
+            }
+        });
+
+        platformSelect.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}

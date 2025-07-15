@@ -1,0 +1,53 @@
+<!-- users/templates/users/following.html -->
+{% extends 'users/base.html' %}
+{% block title %}{{ user.username }} is Following - PROFO{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="container mt-5 mb-5">
+    <!-- Page Title -->
+    <div class="text-center">
+        <h1 class="display-5 fw-bold">{{ user.username }} is Following</h1>
+        <p class="">Here is the list of people {{ user.username }} is currently following.</p>
+    </div>
+
+    {% if following %}
+        <!-- Following List -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-8">
+                <ul class="list-group shadow">
+                    {% for follow in following %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <!-- Link to Profile -->
+                            <a href="{% url 'public_profile' follow.followed.username %}" class="text-decoration-none text-primary fw-semibold">
+                                {{ follow.followed.username }}
+                            </a>
+                            <!-- Unfollow Button -->
+                            {% if request.user == user %}
+                                <form method="POST" action="{% url 'unfollow_user' follow.followed.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Unfollow</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        <!-- Not Following Anyone -->
+        <div class="text-center mt-5">
+            <p class="fs-5">{{ user.username }} is not following anyone yet.</p>
+        </div>
+    {% endif %}
+
+    <!-- Back to Profile Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'profile' user.username %}" class="btn btn-secondary">Back to Profile</a>
+    </div>
+</div>
+
+{% endblock %}

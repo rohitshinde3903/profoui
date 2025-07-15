@@ -1,0 +1,720 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Your Profile | PROFO{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container py-5 fade-in">
+    <div class="profile-container">
+        <!-- Profile Header Card -->
+        <div class="card profile-card mb-4">
+            <div class="profile-cover-image"></div>
+            <div class="card-body position-relative">
+                <div class="profile-badge">
+                    <i class="ph ph-crown me-1"></i>Premium Member
+                </div>
+                
+                <!-- Profile Picture Section -->
+                <div class="profile-picture-section text-center">
+                    <div class="profile-picture-wrapper">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="profile-picture" data-bs-toggle="modal" data-bs-target="#profileImageModal">
+                        {% else %}
+                            <img src="{% static 'users/default/df.png' %}" alt="Default Profile" class="profile-picture">
+                        {% endif %}
+                        <a href="{% url 'edit_profile' %}" class="edit-profile-picture">
+                            <i class="ph ph-camera"></i>
+                        </a>
+                    </div>
+
+                    <h2 class="fw-bold text-primary mt-3">{{ user.username }}</h2>
+                    {% if user.bio %}
+                        <p class="text-muted">{{ user.bio }}</p>
+                    {% endif %}
+
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <a href="{% url 'view_followers' user.username %}" style="text-decoration: none;">
+                            <div class="stat-value" id="followers-btn">{{ user.followers.count }}</div></a>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-card">
+                            <a href="{% url 'view_following' user.username %}" style="text-decoration: none;">
+                            <div class="stat-value" id="following-btn">{{ user.following.count }}</div></a>
+                            <div class="stat-label">Following</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">{{ user.social_links.count }}</div>
+                            <div class="stat-label">Social Links</div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons mt-4">
+                        <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                            <i class="ph ph-pencil me-2"></i>Edit Profile
+                        </a>
+                        <a href="{% url 'notifications' %}" class="btn btn-outline-primary position-relative">
+                            <i class="ph ph-bell me-2"></i>Notifications
+                            <span class="notification-badge">{{ unread_notifications_count }}</span>
+                        </a>
+                        <a href="{% url 'social_links' %}" class="btn btn-outline-primary">
+                            <i class="ph ph-link me-2"></i>Manage Links
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Section -->
+        <div class="card feature-card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="ph ph-file-text text-primary me-2"></i>Resume
+                    </h3>
+                    {% if user.resume %}
+                        <a href="{{ user.resume.url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                            <i class="ph ph-download me-2"></i>Download
+                        </a>
+                    {% else %}
+                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#uploadResumeModal">
+                            <i class="ph ph-upload-simple me-2"></i>Upload Resume
+                        </button>
+                    {% endif %}
+                </div>
+                
+                {% if user.resume %}
+                    <div class="resume-preview">
+                        <i class="ph ph-file-pdf text-primary"></i>
+                        <span class="ms-2">resume.pdf</span>
+                        <small class="text-muted ms-2">Updated 2 days ago</small>
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No resume uploaded yet</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Social Links Section -->
+        <div class="card feature-card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="h5 fw-bold mb-0">
+                        <i class="ph ph-share-network text-primary me-2"></i>Social Links
+                    </h3>
+                    <a href="{% url 'social_links' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="ph ph-plus me-2"></i>Add New
+                    </a>
+                </div>
+
+                <div class="social-links-grid">
+                    {% for link in user.social_links.all %}
+                            
+                                <div class="social-link-card">
+                                    <div class="platform-icon">
+                                        <a href="{{ link.url }}" style="text-decoration:none">
+                                            <img height="50" src="{% static 'users/icons/'|add:link.platform|add:'.png' %}" alt="{{ link.platform }} icon" class="icon-img">
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="link-details">
+                                        <a href="{{ link.url }}" style="text-decoration:none"><h4 class="platform-name">{{ link.platform }}</h4></a>
+                                        <a href="{{ link.url }}" target="_blank" class="link-url">{{ link.url }}</a>
+                                        <div class="link-stats">
+                                            <span class="stats-item">
+                                                <i class="ph ph-eye me-1"></i>{{ link.click_count }} views
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted text-center mb-0">No social links added yet</p>
+                        
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Management Section -->
+        <div class="card feature-card">
+            <div class="card-body">
+                <h3 class="h5 fw-bold mb-4">
+                    <i class="ph ph-gear text-primary me-2"></i>Profile Management
+                </h3>
+                
+                <div class="management-links ">
+                    <a href="{% url 'public_profile' user.username %}" class="management-link-item d-flex flex-row ">
+                        <i class="ph ph-eye mx-4"></i>
+                        <span>View Public Profile</span>
+                        <i class="ph ph-caret-right"></i>
+                    </a>
+                    
+                    
+                    
+                    
+                   
+
+
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resume Upload Modal -->
+<div class="modal fade" id="uploadResumeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Upload Resume</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="upload-area text-center p-4">
+                        <i class="ph ph-upload-simple display-4 text-primary"></i>
+                        <p class="mt-3">Drag and drop your resume here or</p>
+                        <input type="file" name="resume" id="resume" class="d-none" accept=".pdf,.doc,.docx">
+                        <label for="resume" class="btn btn-outline-primary">Choose File</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .navbar-toggler {
+        z-index: 1050;
+    }
+    
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .profile-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+    }
+
+    .profile-cover-image {
+        height: 200px;
+        background: linear-gradient(45deg, var(--primary-color), #ff8f53);
+        position: relative;
+    }
+
+    .profile-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0 0 10px 10px;
+        font-weight: 600;
+        animation: slideDown 0.5s ease;
+    }
+
+    .profile-picture-section {
+        margin-top: -75px;
+    }
+
+    .profile-picture-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid white;
+        object-fit: cover;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .edit-profile-picture {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .edit-profile-picture:hover {
+        transform: scale(1.1);
+    }
+
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 1rem;
+        min-width: 100px;
+    }     
+    
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff4500; /* Highlighted color */
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+    }
+
+    .resume-preview {
+        padding: 1rem;
+        background: rgba(0,0,0,0.02);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .social-links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .social-link-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(0,0,0,0.02);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .social-link-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .platform-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,107,53,0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .platform-icon i {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+
+    .link-details {
+        flex: 1;
+    }
+
+    .platform-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .link-url {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 170px;
+    }
+
+    .link-stats {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+
+    .management-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .management-link-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(0,0,0,0.02);
+        border-radius: 10px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .management-link-item:hover {
+        background: rgba(0,0,0,0.04);
+        transform: translateX(5px);
+    }
+
+    .management-link-item i {
+        font-size: 1.25rem;
+        color: var(--primary-color);
+        margin-right: 1rem;
+    }
+
+    .management-link-item span {
+        flex: 1;
+    }
+
+    .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        background: rgba(0,0,0,0.02);
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            max-width: 100%;
+            padding: 0rem;
+        }
+    
+        .profile-card,
+        .feature-card {
+            padding: 0rem;
+        }
+    
+        .profile-cover-image {
+            height: 150px;
+        }
+    
+        .profile-picture-wrapper {
+            width: 120px;
+            height: 120px;
+        }
+    
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+        }
+    
+        .profile-badge {
+            top: -5px;
+            right: 15px;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+        }
+    
+        .stats-container {
+            justify-content: space-between;
+            gap: 0;
+            width: 100%;
+            padding: 0 1rem;
+        }
+    
+        .stat-card {
+            background: none;
+            padding: 0.5rem;
+            min-width: 0;
+            box-shadow: none;
+        }
+    
+        .stat-value {
+            font-size: 1rem;
+        }
+    
+        .stat-label {
+            font-size: 0.8rem;
+        }
+    
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    
+        .notification-badge {
+            top: -6px;
+            right: -6px;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+        }
+    
+        .resume-preview {
+            flex-direction: column;
+            text-align: center;
+            
+        }
+    
+        .social-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+    .social-link-card {
+        flex-direction: column;
+        align-items: normal;
+    }
+    
+        .platform-icon {
+            margin-bottom: 0.5rem;
+        }
+    
+        .management-link-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    
+        .management-link-item i {
+            margin-right: 0;
+            margin-bottom: auto;
+        }
+    
+        
+    }
+</style>
+
+
+
+
+<script>
+    function updateNotificationsCount() {
+        const url = "{% url 'unread_notifications_count' %}?timestamp=" + Date.now();
+        console.log("Fetching URL:", url);
+    
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Notification Count Data:", data);
+                const badge = document.querySelector('.badge.bg-danger');
+                if (badge) {
+                    if (data.unread_notifications_count > 0) {
+                        badge.textContent = data.unread_notifications_count;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            })
+            .catch(err => console.error('Error fetching notifications:', err));
+    }
+    
+    
+    
+    
+    
+        // Function to fetch followers count
+        // Function to fetch followers count
+    function updateFollowersCount() {
+        fetch("{% url 'followers_count' user.username %}")
+            .then(response => response.json())
+            .then(data => {
+                const followersBtn = document.querySelector('#followers-btn');
+                if (followersBtn) {
+                    // Only update the text after "Followers"
+                    followersBtn.innerHTML = data.followers_count;
+                }
+            })
+            .catch(err => console.error('Error fetching followers count:', err));
+    }
+    
+    // Function to fetch following count
+    function updateFollowingCount() {
+        fetch("{% url 'following_count' user.username %}")
+            .then(response => response.json())
+            .then(data => {
+                const followingBtn = document.querySelector('#following-btn');
+                if (followingBtn) {
+                    // Only update the text after "Following"
+                    followingBtn.innerHTML = data.following_count;
+                }
+            })
+            .catch(err => console.error('Error fetching following count:', err));
+    }
+    
+    
+        // Call the functions periodically (e.g., every 5 seconds)
+        setInterval(updateNotificationsCount, 3000);
+        setInterval(updateFollowersCount, 3000);
+        setInterval(updateFollowingCount, 3000);
+    
+        // Initial call to load data on page load
+        updateNotificationsCount();
+        updateFollowersCount();
+        updateFollowingCount();
+    
+    </script>
+    
+    <style>
+       
+        /* Copy Button */
+        #copyButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(to right, #d56700, #ffea00);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+    
+        #copyButton:hover {
+            transform: scale(1.1);
+        }
+    
+        .bi {
+            visibility: visible !important;
+            display: inline-block !important;
+            opacity: 1 !important;
+        }
+    </style>
+    
+    <!-- Copy URL Button -->
+    <button id="copyButton" class="shareButton">
+        <i class="bi bi-clipboard me-2"></i> Copy Public URL
+    </button>
+    
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+        <div id="copyToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    🚀 Your public profile link is ready to share! 💼 Send it to recruiters, friends, or anyone who should know about your awesomeness!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.getElementById('copyButton').addEventListener('click', async function () {
+            const url = "https://profo.pythonanywhere.com" + "{% url 'public_profile' user.username %}";
+    
+            try {
+                // Copy the URL to clipboard
+                await navigator.clipboard.writeText(url);
+                console.log("Public profile URL copied to clipboard!");
+    
+                // Show success toast
+                const toastElement = document.getElementById('copyToast');
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+    
+                // Check if the Web Share API is supported
+                if (navigator.share) {
+                    await navigator.share({
+                        title: "Check out my profile on Profo!",
+                        text: "Here's my public profile. Feel free to check it out!",
+                        url: url,
+                    });
+                    console.log("Shared successfully!");
+                } else {
+                    // Fallback for devices that don't support Web Share API
+                    alert('Link copied! Share it via your favorite platform.');
+                    window.open(`https://api.whatsapp.com/send?text=Check+out+this+profile:+${encodeURIComponent(url)}`, '_blank');
+                }
+            } catch (err) {
+                console.error("Failed to copy or share the link:", err);
+            }
+        });
+    </script>
+    
+    
+    
+    <!-- Profile Image Modal -->
+    <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileImageModalLabel">{{ user.username }}'s Profile Image</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="img-fluid rounded" style="max-height: 80vh;">
+                    {% else %}
+                        <img src="{% static 'users/default/df.png' %}" alt="Default Profile" class="img-fluid rounded" style="max-height: 80vh;">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}    

@@ -1,0 +1,23 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Verify OTP | PROFO{% endblock %}
+
+{% block content %}
+
+
+<div class="container d-flex justify-content-center align-items-center vh-100 fade-in">
+    <div class="card shadow-lg p-5" style="max-width: 500px; width: 100%; background-color: #212529; border: 1px solid #343a40;">
+        <h2 class="text-center mb-4" style="color: #20c997;">Verify OTP</h2>
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="otp" class="form-label" style="color: #e9ecef;">Enter OTP</label>
+                <input type="text" id="otp" name="otp" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-outline-success w-100 hover-bounce">Verify OTP</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

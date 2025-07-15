@@ -1,0 +1,125 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Search Profiles{% endblock %}
+
+{% block content %}
+{% load static %}
+{% if user.is_authenticated %}
+<div class="d-flex float-left mt-0">
+    <a href="{% url 'profile' user.username %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Profile</a>
+</div>
+{% endif %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center" style="color: #FF6B35;">
+        <i class="bi bi-search me-2"></i>Search Profiles
+    </h2>
+    <form method="GET" action="{% url 'search_profiles' %}" class="mb-5">
+        <div class="input-group shadow-sm">
+            <input type="text" name="q" class="form-control border-0" placeholder="Search by username or bio" value="{{ query }}" aria-label="Search" required style="border-radius: 0.75rem 0 0 0.75rem;">
+            <button class="btn" style="background-color: #FF6B35; color: white; border-radius: 0 0.75rem 0.75rem 0;" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </form>
+
+    {% if query %}
+        <h4 class="mt-4 text-center" style="color: #FFA368;">
+            <i class="bi bi-emoji-smile me-2"></i>Results for "{{ query }}"
+        </h4>
+        
+        {% if page_obj %}
+            <ul class="list-group mt-4">
+                {% for user in page_obj.object_list %}
+                <li class=" list-group-item p-3 bg-light border-0 rounded-3 mt-2 shadow-sm d-flex justify-content-between align-items-center flex-wrap">
+                    <div class="search d-flex align-items-center">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #FF6B35;">
+                        {% else %}
+                            <img src="{% static 'users/default/df.png' %}" alt="Default Profile" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid #FF6B35;">
+                        {% endif %}
+
+                        <div>
+                            <strong style="color: #FF6B35;">{{ user.username }}</strong>
+                            <p class="text-muted mb-0 bio" style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {{ user.first_name}} {{ user.last_name}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if user in request.user.following.all %}
+                            <form method="POST" action="{% url 'unfollow_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #FF6B35;">
+                                    <i class="bi bi-person-dash-fill me-1"></i>Unfollow
+                                </button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'follow_user' user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm text-white" style="background-color: #FF6B35;">
+                                    <i class="bi bi-person-plus-fill me-1"></i>Follow
+                                </button>
+                            </form>
+                        {% endif %}
+                        <a href="{% url 'public_profile' user.username %}" class="btn btn-sm btn-outline-orange">
+                            <i class="bi bi-eye-fill me-1"></i>View Profile
+                        </a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            {% if page_obj.has_other_pages %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                            <a class="page-link shadow-sm text-orange" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">
+                                <i class="bi bi-chevron-left"></i> Previous
+                            </a>
+                        </li>
+                        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                            <a class="page-link shadow-sm text-orange" href="?q={{ query }}&page={{ page_obj.next_page_number }}">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <p class="text-center text-muted mt-4">
+                <i class="bi bi-info-circle me-2"></i>No results found.
+            </p>
+        {% endif %}
+    {% else %}
+        <p class="text-center text-muted mt-4">
+            <i class="bi bi-lightbulb me-2"></i>Enter a search term to find profiles.
+        </p>
+    {% endif %}
+</div>
+
+<style>
+    .btn-outline-orange {
+        border: 2px solid #FF6B35;
+        color: #FF6B35;
+    }
+    .btn-outline-orange:hover {
+        background-color: #FF6B35;
+        color: white;
+    }
+    .text-orange {
+        color: #FF6B35 !important;
+    }
+
+    @media screen and (max-width: 768px) {
+        .btn{
+            margin-top: 5px;
+        }
+
+        .bio{
+            width: 250px;
+        }
+        
+    }
+</style>
+{% endblock %}

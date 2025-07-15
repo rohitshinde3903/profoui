@@ -1,0 +1,415 @@
+{% extends 'users/base.html' %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- User Profile Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-white border-0 pt-4">
+                    <div class="text-center position-relative">
+                        {% load static %}
+                        <div class="profile-image-container">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}"
+                                     class="rounded-circle profile-image shadow"
+                                     style="width: 180px; height: 180px; object-fit: cover; cursor: pointer; border: 4px solid #FF6B35;"
+                                     data-bs-toggle="modal"
+                                     data-bs-target="#profileImageModal">
+                            {% else %}
+                                <img src="{% static 'users/default/df.png' %}" alt="Default Profile"
+                                     class="rounded-circle profile-image shadow"
+                                     style="width: 180px; height: 180px; object-fit: cover; cursor: pointer; border: 4px solid #FF6B35;"
+                                     data-bs-toggle="modal"
+                                     data-bs-target="#profileImageModal">
+                            {% endif %}
+                            {% if user == request.user %}
+                                <button class="btn btn-sm btn-light shadow-sm position-absolute" 
+                                        style="bottom: 10px; right: 50%; transform: translateX(80px);"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#profileImageModal">
+                                    <i class="bi bi-camera-fill text-orange"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-2">
+                    <h2 class="card-title text-center mb-4" style="color: #FF6B35;">
+                        <i class="bi bi-person-circle me-2"></i>{{ user.username }}
+                    </h2>
+
+                    {% if user.first_name %}
+                        <div class="text-center mb-3">
+                            <i class="bi bi-person-badge me-2" style="color: #FF6B35;"></i>
+                            <span class="fw-bold">{{ user.first_name }} {{ user.last_name }}</span>
+                        </div>
+                    {% endif %}
+
+                    <div class="bio-section bg-light p-3 rounded-3 mb-4">
+                        <h5 class="text-center mb-3" style="color: #FF6B35;">
+                            <i class="bi bi-journal-text me-2"></i>Bio
+                        </h5>
+                        <p class="text-center mb-0">
+                            {% if user.bio %}
+                                {{ user.bio }}
+                            {% else %}
+                                <span class="text-muted">No Bio Added</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Stats Cards -->
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <a href="{% url 'view_followers' user.username %}" style="text-decoration: none;">
+                            <div class="stat-value">{{ user.followers.count }}</div></a>
+                            <div class="stat-label">Followers</div>
+                        </div>
+                        <div class="stat-card">
+                            <a href="{% url 'view_following' user.username %}" style="text-decoration: none;">
+                            <div class="stat-value">{{ user.following.count }}</div></a>
+                            <div class="stat-label">Following</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">{{ user.social_links.count }}</div>
+                            <div class="stat-label">Social Links</div>
+                        </div>
+                    </div>
+
+                    <!-- Resume Section -->
+                    <div class="text-center mb-4">
+                        <h5 style="color: #FF6B35;">
+                            <i class="bi bi-file-earmark-text me-2"></i>Resume
+                        </h5>
+                        {% if user.resume %}
+                            <a href="{{ user.resume.url }}" class="btn btn-outline-orange" target="_blank">
+                                <i class="bi bi-download me-2"></i>View/Download Resume
+                            </a>
+                        {% else %}
+                            <p class="text-muted mb-0">No Resume Uploaded</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Follow/Unfollow Section -->
+                    {% if user != request.user %}
+                        <div class="text-center">
+                            {% if user in request.user.following.all %}
+                                <a href="{% url 'unfollow_user' user.id %}" class="btn btn-outline-danger">
+                                    <i class="bi bi-person-dash-fill me-2"></i>Unfollow
+                                </a>
+                            {% else %}
+                                <a href="{% url 'follow_user' user.id %}" class="btn btn-orange">
+                                    <i class="bi bi-person-plus-fill me-2"></i>Follow
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- Social Links Section -->
+   <div class="card feature-card mb-4 mt-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="h5 fw-bold mb-0">
+                <i class="ph ph-share-network text-primary me-2"></i>Social Links
+            </h3>
+        </div>
+
+        <div class="social-links-grid">
+            {% for link in user.social_links.all %}
+                        {% if not link.is_private %}
+                <div class="social-link-card">
+                    <div class="platform-icon">
+                        <a href="{{ link.url }}" style=" text-decoration:none"><i class="ph ph-{{ link.platform|lower }}-logo"></i></a>
+                    </div>
+                    <div class="link-details">
+                        <h4 class="platform-name">{{ link.platform }}</h4>
+                        <a href="{{ link.url }}" target="_blank" class="link-url">{{ link.url }}</a>
+                        <div class="link-stats">
+                            <span class="stats-item">
+                                <i class="ph ph-eye me-1"></i>{{ link.click_count }} views
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted text-center mb-0">No social links added yet</p>
+                {% endif %}
+                {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<!-- Profile Image Modal -->
+<div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title" style="color: #FF6B35;" id="profileImageModalLabel">
+                    <i class="bi bi-person-circle me-2"></i>{{ user.username }}'s Profile Image
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="img-fluid rounded shadow" style="max-height: 80vh;">
+                {% else %}
+                    <img src="{% static 'users/default/df.png' %}" alt="Default Profile" class="img-fluid rounded shadow" style="max-height: 80vh;">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+    .stats-container {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 1rem;
+        min-width: 100px;
+    }     
+    
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ff4500; /* Highlighted color */
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .feature-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+    }
+
+    .btn-orange {
+        background-color: #FF6B35;
+        color: white;
+        border: none;
+    }
+    
+    .btn-orange:hover {
+        background-color: #e85d2b;
+        color: white;
+    }
+    
+    .btn-outline-orange {
+        color: #FF6B35;
+        border-color: #FF6B35;
+    }
+    
+    .btn-outline-orange:hover {
+        background-color: #FF6B35;
+        color: white;
+    }
+    
+    .bg-orange {
+        background-color: #FF6B35;
+    }
+    
+    .text-orange {
+        color: #FF6B35;
+    }
+    
+    .profile-image {
+        transition: transform 0.3s ease;
+    }
+    
+    .profile-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .social-links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .social-link-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(0,0,0,0.02);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .social-link-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .platform-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,107,53,0.1);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .platform-icon i {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+    }
+
+    .link-details {
+        flex: 1;
+    }
+
+    .platform-name {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .link-url {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 250px;
+    }
+
+    .link-stats {
+        font-size: 0.8rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+
+    .management-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .management-link-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(0,0,0,0.02);
+        border-radius: 10px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s ease;
+    }
+
+    .management-link-item:hover {
+        background: rgba(0,0,0,0.04);
+        transform: translateX(5px);
+    }
+
+    .management-link-item i {
+        font-size: 1.25rem;
+        color: var(--primary-color);
+        margin-right: 1rem;
+    }
+
+    .management-link-item span {
+        flex: 1;
+    }
+
+    .upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        background: rgba(0,0,0,0.02);
+    }
+
+
+    @media (max-width: 768px) {
+
+        .link-url {
+            
+            max-width: 80px;
+            color: var(--primary-color);
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-details {
+            /* flex: 1; */
+            display: flex
+        ;
+            gap: 1rem;
+            align-content: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .stats-container {
+            justify-content: space-between;
+            gap: 0;
+            width: 100%;
+            padding: 0 1rem;
+        }
+    
+        .stat-card {
+            background: none;
+            padding: 0.5rem;
+            min-width: 0;
+            box-shadow: none;
+        }
+    
+        .stat-value {
+            font-size: 1rem;
+        }
+    
+        .stat-label {
+            font-size: 0.8rem;
+        }
+    
+    .social-links-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .social-link-card {
+        flex-direction: row;
+        align-items: normal;
+    }
+
+    .platform-icon {
+        margin-bottom: 0.5rem;
+    }
+
+    .management-link-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .management-link-item i {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+
+    .upload-area {
+        padding: 2rem 0;
+    }
+}
+</style>
+{% endblock %}

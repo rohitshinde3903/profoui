@@ -1,0 +1,349 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Register | PROFO{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100 fade-in py-5">
+    <div class="register-container">
+        <div class="register-badge">Join PROFO Today!</div>
+        <div class="card register-card">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <div class="feature-icon mx-auto mb-3 regi-icon">
+                        <i class="ph ph-user-plus "></i>
+                    </div>
+                    <h2 class="fw-bold text-primary">Create an Account</h2>
+                    <p class="text-muted">Start managing your social media presence</p>
+                </div>
+
+                <form method="POST" novalidate class="register-form">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="ph ph-user"></i>
+                                    </span>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="ph ph-user"></i>
+                                    </span>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="ph ph-at"></i>
+                            </span>
+                            {{ form.username }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="ph ph-envelope"></i>
+                            </span>
+                            {{ form.email }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="mobile_number" class="form-label">Mobile Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="ph ph-phone"></i>
+                            </span>
+                            {{ form.mobile_number }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="ph ph-lock"></i>
+                            </span>
+                            {{ form.password1 }}
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword1">
+                                <i class="ph ph-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength mt-2" id="passwordStrength">
+                            <div class="progress" style="height: 5px;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted">Password strength: <span id="strengthText">Very weak</span></small>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password2" class="form-label">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="ph ph-lock"></i>
+                            </span>
+                            {{ form.password2 }}
+                            <button type="button" class="btn btn-outline-secondary" id="togglePassword2">
+                                <i class="ph ph-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">
+                                I agree to the <a href="{% url 'terms' %}" class="text-decoration-none">Terms of Service</a> and <a href="{% url 'privacy_policy' %}" class="text-decoration-none">Privacy Policy</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-3 pulse-animation">
+                        <i class="ph ph-user-plus me-2"></i>Create Account
+                    </button>
+                </form>
+
+                <div class="social-register">
+                    <p class="text-center text-muted mb-3">Or register with</p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button class="btn btn-outline-secondary social-btn">
+                            <i class="ph ph-google-logo"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary social-btn">
+                            <i class="ph ph-facebook-logo"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary social-btn">
+                            <i class="ph ph-twitter-logo"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="mb-0">Already have an account? 
+                        <a href="{% url 'login' %}" class="text-decoration-none fw-bold">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-container {
+        max-width: 600px;
+        width: 100%;
+        position: relative;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .register-badge {
+        position: absolute;
+        top: -10px;
+        
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0 0 10px 10px;
+        font-weight: 600;
+        animation: slideDown 0.5s ease;
+        z-index: 1;
+    }
+
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        backdrop-filter: blur(10px);
+    }
+
+    .feature-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: rgba(255,107,53,0.1);
+    }
+
+    .feature-icon i {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+
+    .input-group-text {
+        background: transparent;
+        border-right: none;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+    }
+
+    .input-group .form-control:focus {
+        border-color: #ced4da;
+        box-shadow: none;
+    }
+
+    .social-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .social-btn:hover {
+        transform: translateY(-2px);
+        background: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+    .password-strength .progress-bar {
+        transition: width 0.3s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideDown {
+        from { transform: translateY(-100%); }
+        to { transform: translateY(0); }
+    }
+
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    @media (max-width: 576px) {
+        .register-container {
+            margin: 1rem;
+        }
+        
+        .register-badge {
+            right: 50%;
+            
+            transform: translateX(50%);
+        }
+        .regi-icon{
+            margin-top: 50px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password visibility toggles
+    const togglePassword1 = document.getElementById('togglePassword1');
+    const togglePassword2 = document.getElementById('togglePassword2');
+    const password1Input = document.getElementById('id_password1');
+    const password2Input = document.getElementById('id_password2');
+
+    function setupPasswordToggle(toggleBtn, passwordInput) {
+        if (toggleBtn && passwordInput) {
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                const icon = this.querySelector('i');
+                icon.classList.toggle('ph-eye');
+                icon.classList.toggle('ph-eye-slash');
+            });
+        }
+    }
+
+    setupPasswordToggle(togglePassword1, password1Input);
+    setupPasswordToggle(togglePassword2, password2Input);
+
+    // Password strength meter
+    const strengthBar = document.querySelector('.progress-bar');
+    const strengthText = document.getElementById('strengthText');
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        
+        if (password.length >= 8) strength += 20;
+        if (password.match(/[a-z]+/)) strength += 20;
+        if (password.match(/[A-Z]+/)) strength += 20;
+        if (password.match(/[0-9]+/)) strength += 20;
+        if (password.match(/[!@#$%^&*(),.?":{}|<>]+/)) strength += 20;
+
+        return strength;
+    }
+
+    if (password1Input) {
+        password1Input.addEventListener('input', function() {
+            const strength = checkPasswordStrength(this.value);
+            strengthBar.style.width = strength + '%';
+            
+            if (strength <= 20) {
+                strengthBar.className = 'progress-bar bg-danger';
+                strengthText.textContent = 'Very weak';
+            } else if (strength <= 40) {
+                strengthBar.className = 'progress-bar bg-warning';
+                strengthText.textContent = 'Weak';
+            } else if (strength <= 60) {
+                strengthBar.className = 'progress-bar bg-info';
+                strengthText.textContent = 'Medium';
+            } else if (strength <= 80) {
+                strengthBar.className = 'progress-bar bg-primary';
+                strengthText.textContent = 'Strong';
+            } else {
+                strengthBar.className = 'progress-bar bg-success';
+                strengthText.textContent = 'Very strong';
+            }
+        });
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
