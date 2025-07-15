@@ -1,11 +1,13 @@
 services:
   - type: web
-    name: my-django-app
+    name: PROFO
     env: python
     buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
-    startCommand: "gunicorn PROFO.wsgi:application"  # Changed from 'profo' to 'PROFO'
+    startCommand: "gunicorn PROFO.wsgi:application --bind 0.0.0.0:$PORT"  # Explicitly use PROFO.wsgi
     envVars:
       - key: DJANGO_SECRET_KEY
-        value: 1234  # Generate a real one!
+        value: 1234  # Replace with a real key!
       - key: DJANGO_SETTINGS_MODULE
-        value: PROFO.settings  # Match case with your project
+        value: PROFO.settings
+      - key: PORT
+        value: 10000  # Render requires $PORT (default: 10000)
