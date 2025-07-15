@@ -1,14 +1,19 @@
 services:
-  - type: web
+  web:
+    type: web
     name: PROFO
     env: python
-    pythonVersion: "3.11.9" 
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
-    startCommand: "gunicorn PROFO.wsgi:application --bind 0.0.0.0:$PORT"  # Explicitly use PROFO.wsgi
+    plan: free
+    pythonVersion: "3.11.9"
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn PROFO.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DJANGO_SECRET_KEY
-        value: 1234  # Replace with a real key!
+        value: '1234'
       - key: DJANGO_SETTINGS_MODULE
         value: PROFO.settings
       - key: PORT
-        value: 10000  # Render requires $PORT (default: 10000)
+        value: 10000
