@@ -26,9 +26,6 @@ class CustomUser(AbstractUser):
         related_name='followers',
     )
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
-    
-    # New fields
-    users_skill = models.ManyToManyField(Skill, blank=True, related_name='users')
     intro_video = models.FileField(upload_to='intro_videos/', null=True, blank=True)
     career_growth = models.TextField(blank=True, null=True)
     tagline = models.CharField(max_length=255, blank=True, null=True)
