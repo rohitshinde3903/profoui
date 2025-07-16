@@ -45,7 +45,7 @@ class EditProfileForm(forms.ModelForm):
         fields = [
             'first_name', 'last_name', 'username', 'email',
             'profile_picture', 'bio', 'resume', 'mobile_number', 
-             'users_skill', 'intro_video', 
+            'intro_video', 
             'career_growth', 'tagline'
         ]
         widgets = {
