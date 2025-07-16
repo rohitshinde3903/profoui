@@ -31,21 +31,16 @@ class CustomUserCreationForm(UserCreationForm):
 
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import CustomUser, Skill
+from .models import CustomUser
 
 class EditProfileForm(forms.ModelForm):
-    skills = forms.ModelMultipleChoiceField(
-        queryset=Skill.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),
-        required=False
-    )
-
+    
     class Meta:
         model = CustomUser
         fields = [
             'first_name', 'last_name', 'username', 'email',
             'profile_picture', 'bio', 'resume', 'mobile_number', 
-            'intro_video', 
+              'intro_video', 
             'career_growth', 'tagline'
         ]
         widgets = {
