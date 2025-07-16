@@ -1,19 +1,35 @@
 {% extends 'users/base.html' %}
-
 {% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
 {% if user.is_authenticated %}
-<div class="d-flex float-left mt-0">
-    <a href="{% url 'home'  %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Home</a>
+<div class="d-flex float-left mt-0 mb-3">
+    <a href="{% url 'home' %}" style="color: #ffffff; background-color:#FF6B35" class="btn btn-secondary"><i class="ph ph-arrow-left"></i>Back to Home</a>
 </div>
 {% endif %}
+
 <div class="container py-5">
     <!-- User Profile Card -->
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
-            <div class="card shadow-lg border-0 rounded-4">
-                <div class="card-body pt-4">
+            <div class="card shadow-lg border-0 rounded-4 position-relative overflow-hidden">
+                
+                <!-- 🎥 Intro Video -->
+                {% if user.intro_video %}
+                <div class="intro-video-container">
+                    <video id="introVideo" preload="metadata" class="w-100 h-100">
+                        <source src="{{ user.intro_video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="video-control-overlay">
+                        <button id="playPauseBtn" class="video-control-button">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="card-body pt-5 position-relative" style="z-index: 1;">
                     <div class="row">
                         <!-- Left Section: User Info -->
                         <div class="col-lg-6 mb-4">
@@ -34,14 +50,6 @@
                                                  data-bs-toggle="modal"
                                                  data-bs-target="#profileImageModal">
                                         {% endif %}
-                                        {% if user == request.user %}
-                                            <button class="btn btn-sm btn-light shadow-sm position-absolute" 
-                                                    style="bottom: 10px; right: 50%; transform: translateX(80px);"
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#profileImageModal">
-                                                <i class="bi bi-camera-fill text-orange"></i>
-                                            </button>
-                                        {% endif %}
                                     </div>
                                 </div>
                                 <h2 class="text-center mb-3" style="color: #FF6B35;">
@@ -51,14 +59,11 @@
                                     <div class="text-center mb-3">
                                         <i class="bi bi-person-badge me-2" style="color: #FF6B35;"></i>
                                         <span class="fw-bold">{{ user.first_name }} {{ user.last_name }}</span>
-                                        
                                     </div>
                                     <div class="text-center mb-3">
-                                        <i class="bi bi-person-badge me-2" style="color: #FF6B35;"></i>
+                                        <i class="bi bi-envelope me-2" style="color: #FF6B35;"></i>
                                         <span class="fw-bold">{{ user.email }}</span>
-                                        
                                     </div>
-                                    
                                 {% endif %}
                                 <div class="stats-container d-flex justify-content-center gap-4">
                                     <div class="stat-card text-center">
@@ -149,29 +154,21 @@
                                                  alt="{{ link.platform }} icon" class="icon-img">
                                         </a>
                                     </div>
-                                    
-                                    
                                     <div class="link-details">
-                                        <!-- Platform Name Link -->
                                         <a href="{% url 'track_social_link' link.id %}" style="text-decoration:none" target="_blank">
                                             <h4 class="platform-name">{{ link.platform }}</h4>
                                         </a>
-                                    
-                                        <!-- URL Link -->
                                         <a href="{% url 'track_social_link' link.id %}" target="_blank" class="link-url">{{ link.url }}</a>
-                                    
                                         <div class="link-stats">
                                             <span class="stats-item">
                                                 <i class="ph ph-eye me-1"></i>{{ link.click_count }} views
                                             </span>
                                         </div>
                                     </div>
-                                    
                                 </div>
-                            
                             {% endif %}
-                            {% empty %}
-                                <p class="text-muted text-center mb-0">No social links added yet</p>
+                        {% empty %}
+                            <p class="text-muted text-center mb-0">No social links added yet</p>
                         {% endfor %}
                     </div>
                 </div>
@@ -179,15 +176,6 @@
         </div>
     </div>
 </div>
-
-<style>
-    .social-links-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-</style>
-
 
 <!-- Profile Image Modal -->
 <div class="modal fade" id="profileImageModal" tabindex="-1" aria-labelledby="profileImageModalLabel" aria-hidden="true">
@@ -210,66 +198,127 @@
     </div>
 </div>
 
-<!-- Custom CSS -->
 <style>
+    /* Improved video container */
+    .intro-video-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        z-index: 0;
+        background: linear-gradient(135deg, #FF6B35 0%, #FF9E6D 100%);
+    }
+    
+    .intro-video-container video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7);
+    }
+    
+    .video-control-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.2);
+    }
+    
+    .video-control-button {
+        background-color: rgba(255, 255, 255, 0.85);
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #FF6B35;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .video-control-button:hover {
+        background-color: white;
+        transform: scale(1.1);
+    }
+    
+    /* Profile image positioning */
+    .profile-image-container {
+        margin-top: -50px;
+        z-index: 2;
+        position: relative;
+    }
+    
+    /* Stats container */
     .stats-container {
         display: flex;
         justify-content: center;
-        gap: 2rem;
-        margin-top: 2rem;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
     }
 
     .stat-card {
         text-align: center;
-        padding: 1rem;
-        min-width: 100px;
+        min-width: 80px;
     }     
     
     .stat-value {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #ff4500; /* Highlighted color */
+        color: #FF6B35;
+        line-height: 1.2;
     }
     
     .stat-label {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: #666;
+        line-height: 1.4;
     }
+    
+    /* Feature card */
     .feature-card {
         background: rgba(255, 255, 255, 0.95);
         border-radius: 15px;
         border: none;
         box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         backdrop-filter: blur(10px);
+        margin-top: 30px;
     }
 
     .btn-orange {
         background-color: #FF6B35;
         color: white;
         border: none;
+        transition: all 0.3s ease;
     }
     
     .btn-orange:hover {
         background-color: #e85d2b;
         color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(255,107,53,0.3);
     }
     
     .btn-outline-orange {
         color: #FF6B35;
         border-color: #FF6B35;
+        transition: all 0.3s ease;
     }
     
     .btn-outline-orange:hover {
         background-color: #FF6B35;
         color: white;
-    }
-    
-    .bg-orange {
-        background-color: #FF6B35;
-    }
-    
-    .text-orange {
-        color: #FF6B35;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(255,107,53,0.3);
     }
     
     .profile-image {
@@ -280,181 +329,184 @@
         transform: scale(1.05);
     }
     
+    /* Social links grid */
     .social-links-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
     }
 
     .social-link-card {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 1rem;
+        gap: 1.2rem;
+        padding: 1.2rem;
         background: rgba(0,0,0,0.02);
-        border-radius: 10px;
+        border-radius: 12px;
         transition: all 0.3s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+        height: 100%;
     }
 
     .social-link-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transform: translateY(-5px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        border-color: rgba(255,107,53,0.2);
     }
 
     .platform-icon {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         background: rgba(255,107,53,0.1);
-        border-radius: 10px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    .platform-icon i {
-        font-size: 1.5rem;
-        color: var(--primary-color);
+        flex-shrink: 0;
     }
 
     .link-details {
         flex: 1;
+        min-width: 0;
     }
 
     .platform-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        margin: 0;
+        margin: 0 0 0.2rem 0;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .link-url {
         display: block;
-        font-size: 0.9rem;
-        color: var(--primary-color);
+        font-size: 0.85rem;
+        color: #FF6B35;
         text-decoration: none;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 170px;
+        margin-bottom: 0.3rem;
     }
 
     .link-stats {
         font-size: 0.8rem;
         color: #666;
-        margin-top: 0.5rem;
     }
-
-    .management-links {
+    
+    /* Bio section */
+    .bio-section {
+        min-height: 150px;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        justify-content: center;
     }
 
-    .management-link-item {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        background: rgba(0,0,0,0.02);
-        border-radius: 10px;
-        text-decoration: none;
-        color: inherit;
-        transition: all 0.3s ease;
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .intro-video-container {
+            height: 180px;
+        }
+        
+        .profile-image-container {
+            margin-top: -40px;
+        }
+        
+        .profile-image-container img {
+            width: 150px !important;
+            height: 150px !important;
+        }
+        
+        .social-links-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
     }
-
-    .management-link-item:hover {
-        background: rgba(0,0,0,0.04);
-        transform: translateX(5px);
-    }
-
-    .management-link-item i {
-        font-size: 1.25rem;
-        color: var(--primary-color);
-        margin-right: 1rem;
-    }
-
-    .management-link-item span {
-        flex: 1;
-    }
-
-    .upload-area {
-        border: 2px dashed #ddd;
-        border-radius: 10px;
-        background: rgba(0,0,0,0.02);
-    }
-
 
     @media (max-width: 768px) {
-
-        .link-url {
-            
-            max-width: 0;
-            width: 0;
-            color: var(--primary-color);
-            text-decoration: none;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .intro-video-container {
+            height: 160px;
         }
-
-        .link-details {
-            flex: 1; 
-            display: flex;
-            flex-direction: column;
-            
-            align-content: center;
-            justify-content: center;
-            
+        
+        .profile-image-container {
+            margin-top: -30px;
         }
-
+        
+        .profile-image-container img {
+            width: 130px !important;
+            height: 130px !important;
+        }
+        
         .stats-container {
-            justify-content: space-between;
-            gap: 0;
-            width: 100%;
-            padding: 0 1rem;
-        }
-    
-        .stat-card {
-            background: none;
-            padding: 0.5rem;
-            min-width: 0;
-            box-shadow: none;
-        }
-    
-        .stat-value {
-            font-size: 1.5rem;
-        }
-    
-        .stat-label {
-            font-size: 0.7rem;
-        }
-    
-        .social-links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 1rem;
         }
-
-    .social-link-card {
-        flex-direction: column;
-        align-items: normal;
+        
+        .stat-value {
+            font-size: 1.3rem;
+        }
+        
+        .social-links-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
-    .platform-icon {
-        margin-bottom: 0.5rem;
+    @media (max-width: 576px) {
+        .intro-video-container {
+            height: 140px;
+        }
+        
+        .profile-image-container {
+            margin-top: -20px;
+        }
+        
+        .profile-image-container img {
+            width: 110px !important;
+            height: 110px !important;
+        }
+        
+        .stats-container {
+            gap: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+        }
+        
+        .video-control-button {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+        }
     }
-
-    .management-link-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .management-link-item i {
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
-
-    .upload-area {
-        padding: 2rem 0;
-    }
-}
 </style>
+
+<script>
+    const video = document.getElementById('introVideo');
+    const btn = document.getElementById('playPauseBtn');
+    
+    // Initialize button state
+    btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+    
+    // Toggle play/pause
+    btn.addEventListener('click', function() {
+        if (video.paused) {
+            video.play();
+            btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+        } else {
+            video.pause();
+            btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+        }
+    });
+    
+    // Update button when video ends
+    video.addEventListener('ended', function() {
+        btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+    });
+</script>
+
 {% endblock %}

@@ -1,2 +1,1 @@
 from PROFO.wsgi import application
-from PROFO.wsgi import application

@@ -31,6 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profoui.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profoui.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
+CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 
 
 
@@ -40,16 +42,16 @@ CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonany
 # Application definition
 
 INSTALLED_APPS = [
-    'unfold',
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    'whitenoise.runserver_nostatic',  # Add this before 'django.contrib.staticfiles'
     "django.contrib.staticfiles",
     'users',
-    'widget_tweaks',
-    'whitenoise.runserver_nostatic',  # Add this before 'django.contrib.staticfiles'
+   
     
 ]
 
@@ -90,6 +92,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+
 #Database configuration using the environment variables
 # DATABASES = {
 #     'default': {
@@ -105,7 +108,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),  # Local fallback.
+        'NAME': os.path.join(BASE_DIR, 'db1.sqlite3'),  # Local fallback.
     }
 }
 

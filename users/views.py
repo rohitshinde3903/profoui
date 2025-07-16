@@ -51,17 +51,21 @@ def send_otp_email(request, user_email, otp):
     message = f"Your email verification OTP is {otp}."
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
 
-import pandas as pd
-import plotly.express as px
+
+
+from collections import Counter
 
 def chart_view(request):
-    data = CustomUser.objects.all().values('role')  # Fetch data from CustomUser model
-    df = pd.DataFrame(list(data))
-    fig = px.bar(df, x="role", title="User Roles Distribution", color="role")
+    roles = CustomUser.objects.values_list('role', flat=True)
+    role_counts = Counter(roles)
+    max_count = max(role_counts.values()) if role_counts else 1
 
-    # Convert the Plotly chart to HTML
-    graph = fig.to_html(full_html=False)
-    return render(request, 'admin/chart.html', {'graph': graph})
+    context = {
+        'role_counts': role_counts,
+        'max_count': max_count
+    }
+    return render(request, 'admin/chart.html', context)
+
 
 
 def send_otp_mobile(user_mobile, otp):
@@ -245,24 +249,25 @@ from .forms import CustomUserUpdateForm
 from .models import SocialMediaLink
 from .decorators import custom_login_required
 
+
 @custom_login_required
 def profile(request):
     if request.method == 'POST':
-        form = CustomUserUpdateForm(request.POST, request.FILES, instance=request.user)
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile has been updated.')
             return redirect('profile')
     else:
-        form = CustomUserUpdateForm(instance=request.user)
+        form = EditProfileForm(instance=request.user)
 
-    # Retrieve user's social media links
     links = SocialMediaLink.objects.filter(user=request.user)
 
     return render(request, 'users/profile.html', {
         'form': form,
-        'links': links,  # Pass links to the template
+        'links': links,
     })
+
 
 
 
