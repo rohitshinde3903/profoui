@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +29,8 @@ SECRET_KEY = "1234"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profoui.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
+CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'profoui.onrender.com', 'profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 CSRF_TRUSTED_ORIGINS = ['https://profoui.onrender.com', 'https://profo.pythonanywhere.com', "https://db.abrkaonuipiifisfxyea.supabase.co"]
 
@@ -106,7 +108,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),  # Local fallback.
+        'NAME': os.path.join(BASE_DIR, 'db1.sqlite3'),  # Local fallback.
     }
 }
 
