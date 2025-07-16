@@ -1,0 +1,53 @@
+# Core Django Requirements
+Django==5.1.4
+gunicorn==23.0.0
+python-dotenv==1.1.0
+whitenoise==6.8.2
+sqlparse==0.5.3
+asgiref==3.8.1
+
+pillow
+
+
+
+numpy==1.26.4
+   # Avoid latest pandas 2.3.x which may require 3.13+
+
+
+
+whitenoise==6.8.2
+
+
+
+# Web/API Stack
+aiohttp==3.11.10
+aiohappyeyeballs==2.4.4
+aioitertools==0.12.0
+aiosignal==1.3.2
+async-timeout==4.0.3
+frozenlist==1.5.0
+multidict==6.1.0
+
+# LangChain/AI Stack
+
+
+# Database/ORM
+
+psycopg2-binary==2.9.9  # If using PostgreSQL
+peewee==3.18.2
+
+# Utilities
+click==8.1.8
+python-dateutil==2.9.0.post0
+pytz==2025.2
+tzdata==2024.2
+certifi==2025.6.15
+charset-normalizer==3.4.2
+idna==3.10
+urllib3==2.2.3
+requests==2.32.4
+
+# Development/Quality
+packaging==24.2
+setuptools==80.9.0
+wheel==0.45.1
