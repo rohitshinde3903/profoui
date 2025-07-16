@@ -52,32 +52,20 @@ def send_otp_email(request, user_email, otp):
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user_email])
 
 
-import plotly.express as px
+
 from collections import Counter
 
 def chart_view(request):
-    # Get role counts using Python's Counter
     roles = CustomUser.objects.values_list('role', flat=True)
     role_counts = Counter(roles)
-    
-    # Prepare data for Plotly
-    data = {
-        'role': list(role_counts.keys()),
-        'count': list(role_counts.values())
+    max_count = max(role_counts.values()) if role_counts else 1
+
+    context = {
+        'role_counts': role_counts,
+        'max_count': max_count
     }
-    
-    # Create Plotly chart directly from the dictionary
-    fig = px.bar(
-        data,
-        x='role',
-        y='count',
-        title='User Roles Distribution',
-        color='role'
-    )
-    
-    # Convert to HTML
-    graph = fig.to_html(full_html=False)
-    return render(request, 'admin/chart.html', {'graph': graph})
+    return render(request, 'admin/chart.html', context)
+
 
 
 def send_otp_mobile(user_mobile, otp):
